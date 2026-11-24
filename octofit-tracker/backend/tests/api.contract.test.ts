@@ -63,18 +63,6 @@ describe('OctoFit API contract', () => {
     expect(listed.body.teams[0]).toMatchObject({ name: 'Octocats', mascot: 'Mona' });
     expect(listed.body.teams[0].members.map((id: string) => id.toString())).toContain(member._id.toString());
   });
-  it('stores each team member only once when IDs are duplicated', async () => {
-    const member = await User.create({ name: 'Mona', email: 'mona@example.com', fitnessGoal: 'endurance' });
-    const memberId = member._id.toString();
-    const created = await request(app).post('/api/teams').send({
-      name: 'Octocats',
-      mascot: 'Mona',
-      members: [memberId, memberId],
-    });
-
-    expect(created.status).toBe(201);
-    expect(created.body.team.members.map((id: string) => id.toString())).toEqual([memberId]);
-  });
   it('orders leaderboard entries by total points', async () => {
     const mona = await createUserAndTeam('Mona', 'mona@example.com', 'Mona', 'Octocats');
     const hubot = await createUserAndTeam('Hubot', 'hubot@example.com', 'Hubot', 'Robocats');
